@@ -1,7 +1,8 @@
 {
   "name": "Images, SBOMs, and Scanning Lab",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
   "postCreateCommand": "npm ci",
   "features": {

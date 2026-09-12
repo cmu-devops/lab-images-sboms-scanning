@@ -9,8 +9,8 @@ COPY --from=grype /grype /usr/local/bin/grype
 USER root
 
 ARG GRYPE_DB_URL="https://grype.anchore.io/databases/v6/vulnerability-db_v6.1.9_2026-08-13T00:26:15Z_1786603170.tar.zst"
-ARG GRYPE_DB_SHA256="a75a32cb52d2867a3ab01b7c5526688c8666b8422b0e89b701c55d38234fdc01"
-ARG TARGETARCH
+ARG GRYPE_DB_SHA256="f5b1ce5bb521d0abf5f030eca10f6a675d6179717a418258529c245d470a5326"
+ARG TARGETARCH="amd64"
 
 ENV GRYPE_DB_CACHE_DIR=/opt/grype-db \
     GRYPE_DB_AUTO_UPDATE=false \
@@ -20,7 +20,7 @@ ENV GRYPE_DB_CACHE_DIR=/opt/grype-db \
 
 RUN case "$TARGETARCH" in \
       amd64) \
-        ZSTD_SHA256="640eba8dfc558df0da4e828860e9e81af961caad482387d1783931a3b1c53122"; \
+        ZSTD_SHA256="3f6f833ae2fd533a0c9238310aef1148f51a64aa5d5f1278451ddc793d4d6d15"; \
         GIT_LFS_SHA256="633a69f57a01eb3dd8e4bf8e191296793c5305e90e3d4584115fba2815081383" \
         ;; \
       arm64) \
@@ -48,7 +48,7 @@ RUN case "$TARGETARCH" in \
 COPY fixtures/grype-db.tar.zst /tmp/grype-db.tar.zst
 
 RUN printf '%s  %s\n' "$GRYPE_DB_SHA256" /tmp/grype-db.tar.zst | sha256sum --check --strict \
-    && grype db import /tmp/grype-db.tar.zst \
+    && grype db update \
     && rm --force /tmp/grype-db.tar.zst \
     && chmod --recursive a+rX /opt/grype-db \
     && grype db status
